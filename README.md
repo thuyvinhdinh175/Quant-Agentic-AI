@@ -144,8 +144,6 @@ flowchart LR
 
 ## Features
 
-### Phase 1: MVP Upgrade (Complete)
-
 - **Natural Language Interface**: Ask questions about stocks in plain English
 - **Multi-Agent Architecture**: Specialized AI agents for different tasks
 - **Local LLM Integration**: Powered by DeepSeek-R1 running via Ollama
@@ -156,7 +154,7 @@ flowchart LR
 - **Technical Indicators**: Integration with TA-Lib for advanced technical analysis
 - **Logging & Query Templates**: Structured logging and predefined query templates for common analyses
 
-### Phase 2: Power Users Features (In Progress)
+### Coming Soon
 
 - **PDF Export**: Generate comprehensive PDF reports with analysis findings
 - **Risk Analysis**: Dedicated agent for risk assessment and portfolio vulnerability analysis
