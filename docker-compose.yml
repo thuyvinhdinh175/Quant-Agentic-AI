@@ -1,15 +1,16 @@
 version: '3.8'
 
 services:
-  financial-analyst:
+  quant-agentic-ai:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: financial-analyst-deepseek
+    container_name: quant-agentic-ai
     ports:
-      - "8000:8000"  # Expose the MCP server port
+      - "8000:8000"  # MCP server port
+      - "8501:8501"  # Streamlit port
     volumes:
-      - ./data:/app/data  # Mount a volume for persistent data (if needed)
+      - ./data:/app/data  # Mount a volume for persistent data
     environment:
       - OLLAMA_HOST=localhost
       - OLLAMA_PORT=11434

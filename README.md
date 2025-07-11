@@ -1,33 +1,87 @@
-# Financial Analyst DeepSeek
+# Quant Agentic AI
 
-A powerful AI-driven financial analysis system that processes natural language queries about stocks and generates detailed visualizations and insights.
+A powerful agentic AI system for quantitative financial analysis that processes natural language queries about stocks and generates detailed visualizations and insights using a multi-agent architecture powered by DeepSeek-R1.
 
 ## Architecture Overview
 
 ```mermaid
 graph TD
+    %% Main flow
     A[User] -->|Natural Language Query| B[MCP Server]
-    B -->|Parse Query| C[Query Parser Agent]
-    C -->|Extracted Data| D[Code Writer Agent]
-    D -->|Python Code| E[Code Execution Agent]
-    E -->|Execute & Validate| F[Stock Data Visualization]
-    F -->|Result| B
     B -->|Final Result| A
     
-    G[yfinance API] -->|Stock Data| E
-    H[Ollama - DeepSeek-R1] -->|LLM Capabilities| C
-    H -->|LLM Capabilities| D
-    H -->|LLM Capabilities| E
+    %% Subgraph for Agent System
+    subgraph AgentSystem["Multi-Agent System"]
+        C[Query Parser Agent] -->|Extracted Data| D[Code Writer Agent]
+        D -->|Python Code| E[Code Execution Agent]
+        E -->|Code Analysis| F[Technical Analysis Agent]
+        F -->|Risk Assessment| G[Risk Analysis Agent]
+        G -->|Market Sentiment| H[Sentiment Agent]
+    end
+    
+    %% Connection from Server to Agent System
+    B -->|Parse Query| C
+    
+    %% Subgraph for Data Sources
+    subgraph DataSources["Data Sources"]
+        I[yfinance API] -->|Stock Data| E
+        J[News APIs] -->|Financial News| H
+        K[SEC Filings] -->|Company Reports| G
+        L[TA-Lib] -->|Technical Indicators| F
+    end
+    
+    %% Subgraph for UI and Output
+    subgraph UserInterface["User Interface"]
+        M[Streamlit UI]
+        N[PDF Reports]
+        O[Interactive Charts]
+        P[IDE Plugin]
+    end
+    
+    %% Connect Agent System to UI
+    H -->|Analysis Results| M
+    H -->|Generate Report| N
+    F -->|Visualization Data| O
+    B -->|IDE Integration| P
+    
+    %% Subgraph for LLM Backend
+    subgraph LLMBackend["LLM Backend"]
+        Q[Ollama - DeepSeek-R1]
+        R[Agent Memory]
+        S[Query Templates]
+        T[Logging System]
+    end
+    
+    %% Connect LLM to Agents
+    Q -->|LLM Capabilities| C
+    Q -->|LLM Capabilities| D
+    Q -->|LLM Capabilities| G
+    Q -->|LLM Capabilities| H
+    R -->|Historical Context| C
+    S -->|Structured Prompts| C
+    AgentSystem -->|Log Events| T
 ```
 
 ## Features
+
+### Phase 1: MVP Upgrade (Complete)
 
 - **Natural Language Interface**: Ask questions about stocks in plain English
 - **Multi-Agent Architecture**: Specialized AI agents for different tasks
 - **Local LLM Integration**: Powered by DeepSeek-R1 running via Ollama
 - **Automated Code Generation**: Generates Python code for stock analysis
 - **Data Visualization**: Creates charts and graphs for stock performance
-- **Flexible Analysis**: Handles various timeframes and comparison scenarios
+- **Streamlit UI**: User-friendly web interface for query input and result display
+- **Agent Memory**: Persistent memory using LangChain to retain context across sessions
+- **Technical Indicators**: Integration with TA-Lib for advanced technical analysis
+- **Logging & Query Templates**: Structured logging and predefined query templates for common analyses
+
+### Phase 2: Power Users Features (In Progress)
+
+- **PDF Export**: Generate comprehensive PDF reports with analysis findings
+- **Risk Analysis**: Dedicated agent for risk assessment and portfolio vulnerability analysis
+- **Sentiment Analysis**: Agent that analyzes news and social media sentiment for stocks
+- **IDE Plugin Support**: Integration with popular IDEs for seamless developer experience
 
 ## Prerequisites
 
@@ -41,8 +95,8 @@ The easiest way to run the project is using Docker:
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd financial-analyst-deepseek
+git clone https://github.com/thuyvinhdinh175/Quant-Agentic-AI.git
+cd Quant-Agentic-AI
 
 # Build and start the Docker container
 docker-compose up --build -d
@@ -124,6 +178,20 @@ Ask the system financial questions like:
 
 - `server.py`: MCP server implementation that handles incoming queries
 - `finance_crew.py`: Multi-agent system using CrewAI for financial analysis
+- `streamlit_app.py`: Streamlit web interface for interacting with the system
+- `agents/`
+  - `query_parser.py`: Agent for parsing natural language queries
+  - `code_writer.py`: Agent for generating Python analysis code
+  - `execution.py`: Agent for executing and validating code
+  - `technical_analysis.py`: Agent for technical indicator analysis
+  - `risk_analysis.py`: Agent for risk assessment
+  - `sentiment.py`: Agent for news and social media sentiment analysis
+- `utils/`
+  - `memory.py`: Agent memory implementation
+  - `logging.py`: Logging utilities
+  - `templates.py`: Query templates
+  - `pdf_generator.py`: PDF report generation
+- `data/`: Directory for data caching and storage
 - `Dockerfile` & `docker-compose.yml`: Containerization configuration
 - `pyproject.toml`: Project dependencies and configuration
 
