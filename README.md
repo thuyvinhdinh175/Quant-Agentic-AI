@@ -6,72 +6,76 @@ A powerful agentic AI system for quantitative financial analysis that processes 
 
 ```mermaid
 flowchart TD
-    %% Main user flow
-    A[User] -->|Natural Language Query| B[MCP Server]
-    B -->|Final Result| A
-    
-    %% Connect Server to Agent System
-    B -->|Parse Query| C
-    
-    %% Explicit subgraph direction
-    direction TB
-    
-    %% Subgraph for LLM Backend
-    subgraph LLMBackend["LLM Backend"]
-        direction LR
+    %% User Layer
+    subgraph User["👤 User"]
+        A[User Input (Natural Language)]
+    end
+
+    %% MCP Layer
+    subgraph MCP["🧠 MCP Server"]
+        B[MCP Server]
+    end
+
+    %% LLM Backend
+    subgraph LLM["🧩 LLM Backend"]
         Q[Ollama - DeepSeek-R1]
         R[Agent Memory]
         S[Query Templates]
         T[Logging System]
     end
-    
-    %% Connect LLM to other components
-    Q -->|LLM Capabilities| C
-    Q -->|LLM Capabilities| D
-    Q -->|LLM Capabilities| G
-    Q -->|LLM Capabilities| H
-    R -->|Historical Context| C
-    S -->|Structured Prompts| C
-    AgentSystem -->|Log Events| T
-    
-    %% Subgraph for Agent System
-    subgraph AgentSystem["Multi-Agent System"]
-        direction LR
-        C[Query Parser Agent] -->|Extracted Data| D[Code Writer Agent]
-        D -->|Python Code| E[Code Execution Agent]
-        E -->|Code Analysis| F[Technical Analysis Agent]
-        F -->|Risk Assessment| G[Risk Analysis Agent]
-        G -->|Market Sentiment| H[Sentiment Agent]
+
+    %% Multi-Agent System
+    subgraph Agents["🤖 Agent System"]
+        C[Query Parser Agent]
+        D[Code Writer Agent]
+        E[Code Execution Agent]
+        F[Technical Analysis Agent]
+        G[Risk Analysis Agent]
+        H[Sentiment Agent]
     end
-    
-    %% Subgraph for Data Sources
-    subgraph DataSources["Data Sources"]
-        direction LR
-        I[yfinance API] -->|Stock Data| E
-        J[News APIs] -->|Financial News| H
-        K[SEC Filings] -->|Company Reports| G
-        L[TA-Lib] -->|Technical Indicators| F
+
+    %% Data Sources
+    subgraph Data["📊 Data Sources"]
+        I[yfinance API]
+        J[News APIs]
+        K[SEC Filings]
+        L[TA-Lib]
     end
-    
-    %% Subgraph for UI and Output
-    subgraph UserInterface["User Interface"]
-        direction LR
+
+    %% User Interface Layer
+    subgraph UI["🖼️ User Interface"]
         M[Streamlit UI]
         N[PDF Reports]
         O[Interactive Charts]
         P[IDE Plugin]
     end
-    
-    %% Connect Agent System to UI
-    H -->|Analysis Results| M
-    H -->|Generate Report| N
-    F -->|Visualization Data| O
-    B -->|IDE Integration| P
-    
-    %% Vertical arrangement of subgraphs
-    LLMBackend --> AgentSystem
-    AgentSystem --> DataSources
-    DataSources --> UserInterface
+
+    %% User Query Flow
+    A --> B
+    B --> C
+
+    %% Agent Flow
+    C --> D --> E --> F --> G --> H
+
+    %% LLM Support
+    Q --> C & D & E & F & G & H
+    R --> C
+    S --> C
+    C --> T
+    D --> T
+    E --> T
+
+    %% Data Sources Connection
+    E --> I
+    F --> L
+    G --> K
+    H --> J
+
+    %% Output Connections
+    H --> M & N
+    F --> O
+    B --> P
+
 ```
 
 ## Features
