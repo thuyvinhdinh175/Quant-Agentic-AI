@@ -2,234 +2,174 @@
 
 A powerful agentic AI system for quantitative financial analysis that processes natural language queries about stocks and generates detailed visualizations and insights using a multi-agent architecture powered by DeepSeek-R1.
 
-## Architecture Overview
 
-### Complete System Architecture
+**Key Capabilities:**
 
-```mermaid
-graph TD
-    User["User"] -->|"Query"| MCP["MCP Server"]
-    MCP -->|"Results"| User
-    MCP -->|"Process"| Agents["Agent System"]
-    Agents -->|"Access"| Data["Data Sources"]
-    Agents -->|"Generate"| UI["User Interface"]
-    LLM["LLM Backend"] -->|"Power"| Agents
-    Agents -->|"Log"| LLM
-    Data -->|"Return"| Agents
+* Transform natural language questions into comprehensive financial analyses
+* Generate and execute Python code tailored to specific financial queries
+* Create interactive visualizations of stock performance and technical indicators
+* Provide technical analysis using industry-standard indicators and patterns
+* Run completely locally, ensuring data privacy and eliminating API costs
+* Process and analyze multiple data sources for holistic market insights
+
+Built on DeepSeek-R1 and running via Ollama, this project demonstrates how agentic AI systems can deliver specialized domain expertise while maintaining full local execution. The system's modular design allows for continuous enhancement with new capabilities like sentiment analysis, risk assessment, and PDF report generation.
+
+## 🏗️ System Architecture
+
+```
+┌────────────────────────┐
+│ Natural Language Query │
+└───────────┬────────────┘
+            ↓
+┌───────────────────────┐
+│ MCP Server & Parsing  │ <──── (CrewAI + Query Parsing)
+└────┬──────────┬───────┘
+     ↓          ↓
+┌────────────┐  ┌────────────────────┐
+│ Code Gen   │  │ Multi-Agent System │ <──── (CrewAI + DeepSeek-R1)
+└────┬───────┘  └────┬───────────────┘
+     ↓               ↓
+┌────────────┐  ┌────────────────────┐
+│ Execution  │  │ Technical Analysis │
+└────┬───────┘  └────┬───────────────┘
+     ↓               ↓
+┌───────────────────────────┐
+│ Visualization & Reporting │
+└───────────────────────────┘
 ```
 
-### Themed Diagrams
+## 🛠️ Core Stack
 
-#### User Interaction Flow
+| Layer | Tools |
+|-------|-------|
+| Frontend | Streamlit / Cursor IDE |
+| Agent Orchestration | CrewAI |
+| LLM Reasoning | DeepSeek-R1 via Ollama |
+| Data Retrieval | yfinance / News APIs / SEC Filings |
+| Technical Analysis | TA-Lib / Pandas / Matplotlib |
+| Memory System | LangChain / Custom Persistence |
+| Containerization | Docker / Docker Compose |
 
-```mermaid
-graph LR
-    User["User"] -->|"Query"| MCP["MCP Server"]
-    MCP -->|"Parse"| QueryAgent["Query Parser Agent"]
-    QueryAgent -->|"Structure"| CodeAgent["Code Writer Agent"]
-    CodeAgent -->|"Code"| ExecAgent["Code Execution Agent"]
-    ExecAgent -->|"Results"| MCP
-    MCP -->|"Display"| User
+## 🔍 Key Features
+
+### ✅ Natural Language Processing
+* Transform plain English queries into structured analysis
+* Extract stock symbols, timeframes, and analysis type
+* Support for comparative analysis across multiple stocks
+
+### ✅ Automated Code Generation
+* Dynamic Python code creation for specific analysis needs
+* Auto-adaptation to different stock metrics and timeframes
+* Intelligent error correction and validation
+
+### ✅ Technical Analysis
+* Over 15 common technical indicators (RSI, MACD, Bollinger Bands)
+* Pattern recognition and trend analysis
+* Volatility and momentum measurements
+
+### ✅ Multi-Agent Collaboration
+* Specialized agents for different analysis aspects
+* Agent memory for consistent conversation context
+* Hierarchical task delegation and result synthesis
+
+### ✅ Visualization & Reporting
+* Interactive stock charts and indicator plots
+* Comparative multi-stock visualization
+* PDF report generation with analysis summaries
+
+## 🚀 Advanced Ideas
+
+| Feature | Description |
+|---------|-------------|
+| 🧠 Portfolio Analysis | Multi-stock correlation and risk assessment across portfolios |
+| 🔁 Backtesting | Test trading strategies against historical market data |
+| 📈 Sentiment Integration | News and social media sentiment impact on stock movements |
+| 🔮 Market Prediction | Probabilistic forecasting of potential price movements |
+
+## 🗂️ Project Folder Structure
+
+```
+Quant-Agentic-AI/
+│
+├── agents/                # Specialized agent implementations
+│   ├── query_parser.py    # Query parsing and extraction
+│   ├── code_writer.py     # Python code generation
+│   ├── execution.py       # Code execution and validation
+│   ├── technical_analysis.py # Technical indicator analysis
+│   ├── risk_analysis.py   # Risk assessment and evaluation
+│   └── sentiment.py       # News and social sentiment analysis
+│
+├── utils/                 # Utility modules
+│   ├── memory.py          # Agent memory implementation
+│   ├── logging.py         # Logging utilities
+│   ├── templates.py       # Query templates
+│   └── pdf_generator.py   # PDF report generation
+│
+├── data/                  # Data storage and caching
+│   ├── logs/              # System and agent logs
+│   └── reports/           # Generated reports
+│
+├── server.py              # MCP server implementation
+├── finance_crew.py        # CrewAI orchestration logic
+├── streamlit_app.py       # Streamlit web interface
+├── Dockerfile             # Container definition
+├── docker-compose.yml     # Multi-container setup
+├── requirements.txt       # Python dependencies
+└── README.md              # Project documentation
 ```
 
-#### Multi-Agent System
-
-```mermaid
-graph LR
-    QueryAgent["Query Parser Agent"] -->|"Extract"| CodeAgent["Code Writer Agent"]
-    CodeAgent -->|"Generate"| ExecAgent["Code Execution Agent"]
-    ExecAgent -->|"Analyze"| TechAgent["Technical Analysis Agent"]
-    TechAgent -->|"Assess"| RiskAgent["Risk Analysis Agent"]
-    RiskAgent -->|"Evaluate"| SentimentAgent["Sentiment Agent"]
-    
-    subgraph Agents["Agent System"]
-        QueryAgent
-        CodeAgent
-        ExecAgent
-        TechAgent
-        RiskAgent
-        SentimentAgent
-    end
-```
-
-#### Data Source Integration
-
-```mermaid
-graph LR
-    ExecAgent["Code Execution Agent"] -->|"Fetch"| YFinance["yfinance API"]
-    YFinance -->|"Return"| ExecAgent
-    
-    TechAgent["Technical Analysis Agent"] -->|"Use"| TALib["TA-Lib"]
-    TALib -->|"Provide"| TechAgent
-    
-    RiskAgent["Risk Analysis Agent"] -->|"Read"| SEC["SEC Filings"]
-    SEC -->|"Inform"| RiskAgent
-    
-    SentimentAgent["Sentiment Agent"] -->|"Query"| News["News APIs"]
-    News -->|"Deliver"| SentimentAgent
-```
-
-#### LLM & Memory Integration
-
-```mermaid
-graph TD
-    DeepSeek["DeepSeek-R1 Model"] -->|"Power"| QueryAgent["Query Parser Agent"]
-    DeepSeek -->|"Enable"| CodeAgent["Code Writer Agent"]
-    DeepSeek -->|"Support"| RiskAgent["Risk Analysis Agent"]
-    DeepSeek -->|"Enhance"| SentimentAgent["Sentiment Agent"]
-    
-    Memory["Agent Memory"] -->|"Inform"| QueryAgent
-    Templates["Query Templates"] -->|"Guide"| QueryAgent
-    
-    QueryAgent -->|"Log"| Logging["Logging System"]
-    CodeAgent -->|"Record"| Logging
-```
-
-#### Output Generation Flow
-
-```mermaid
-graph LR
-    SentimentAgent["Sentiment Agent"] -->|"Display"| Streamlit["Streamlit UI"]
-    SentimentAgent -->|"Generate"| PDF["PDF Reports"]
-    TechAgent["Technical Analysis Agent"] -->|"Visualize"| Charts["Interactive Charts"]
-    MCP["MCP Server"] -->|"Connect"| Plugin["IDE Plugin"]
-```
-
-## Features
-
-* **Natural Language Interface**: Ask questions about stocks in plain English
-* **Multi-Agent Architecture**: Specialized AI agents for different tasks
-* **Local LLM Integration**: Powered by DeepSeek-R1 running via Ollama
-* **Automated Code Generation**: Generates Python code for stock analysis
-* **Data Visualization**: Creates charts and graphs for stock performance
-* **Streamlit UI**: User-friendly web interface for query input and result display
-* **Agent Memory**: Persistent memory using LangChain to retain context across sessions
-* **Technical Indicators**: Integration with TA-Lib for advanced technical analysis
-* **Logging & Query Templates**: Structured logging and predefined query templates for common analyses
-
-### Coming Soon
-
-* **PDF Export**: Generate comprehensive PDF reports with analysis findings
-* **Risk Analysis**: Dedicated agent for risk assessment and portfolio vulnerability analysis
-* **Sentiment Analysis**: Agent that analyzes news and social media sentiment for stocks
-* **IDE Plugin Support**: Integration with popular IDEs for seamless developer experience
-
-## Prerequisites
-
-* Python 3.12 or later
-* Ollama (for running DeepSeek-R1 locally)
-* Docker and Docker Compose (for containerized deployment)
-
-## Quick Start (Docker)
-
-The easiest way to run the project is using Docker:
+## 📦 Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/thuyvinhdinh175/Quant-Agentic-AI.git
 cd Quant-Agentic-AI
 
-# Build and start the Docker container
+# Option 1: Using Docker (recommended)
 docker-compose up --build -d
 
-# Check logs
-docker-compose logs -f
-```
-
-## Manual Setup
-
-If you prefer to run the project without Docker:
-
-1. **Install Ollama**
-
-```bash
-# For Linux
+# Option 2: Manual setup
+# Install Ollama
 curl -fsSL https://ollama.com/install.sh | sh
 
 # Pull the DeepSeek-R1 model
 ollama pull deepseek-r1:7b
-```
 
-2. **Install Dependencies**
-
-```bash
-# Using uv (recommended)
-uv sync
-
-# Or using pip
+# Install Python dependencies
 pip install -r requirements.txt
-```
 
-3. **Configure MCP Server in Cursor IDE**
-
-* Go to Cursor settings
-* Select MCP 
-* Add new global MCP server with the following configuration:
-
-```json
-{
-    "mcpServers": {
-        "financial-analyst": {
-            "command": "uv",
-            "args": [
-                "--directory",
-                "absolute/path/to/project_root",
-                "run",
-                "server.py"
-            ]
-        }
-    }
-}
-```
-
-4. **Run the Server**
-
-```bash
+# Run the server
 python server.py
 ```
 
-## Usage Examples
+## 🚀 Usage
 
-Ask the system financial questions like:
+### Command Line / IDE Integration
 
-* "Show me Tesla's stock performance over the last 3 months"
-* "Compare Apple and Microsoft stocks for the past year"
-* "Analyze the trading volume of Amazon stock for the last month"
-* "Plot YTD stock gain of Tesla"
-* "Show me the price-to-earnings ratio for NVIDIA"
+1. Configure the MCP server in Cursor IDE settings
+2. Send natural language queries directly in the IDE
+3. View results and generated code inline
 
-## How It Works
+### Web Interface
 
-1. **Query Parsing**: The system interprets your natural language query to extract stock symbols, timeframes, and analysis actions.
-2. **Code Generation**: Based on the parsed query, it generates Python code using yfinance, pandas, and matplotlib.
-3. **Execution & Validation**: The generated code is executed and validated to ensure it works correctly.
-4. **Visualization**: The system creates charts and graphs to visualize the requested financial data.
+1. Start the Streamlit app: `streamlit run streamlit_app.py`
+2. Access the web interface at http://localhost:8501
+3. Enter your financial query in the input field
+4. Review the generated analysis and visualizations
 
-## Project Structure
+### Example Queries
 
-* `server.py`: MCP server implementation that handles incoming queries
-* `finance_crew.py`: Multi-agent system using CrewAI for financial analysis
-* `streamlit_app.py`: Streamlit web interface for interacting with the system
-* `agents/`
-  * `query_parser.py`: Agent for parsing natural language queries
-  * `code_writer.py`: Agent for generating Python analysis code
-  * `execution.py`: Agent for executing and validating code
-  * `technical_analysis.py`: Agent for technical indicator analysis
-  * `risk_analysis.py`: Agent for risk assessment
-  * `sentiment.py`: Agent for news and social media sentiment analysis
-* `utils/`
-  * `memory.py`: Agent memory implementation
-  * `logging.py`: Logging utilities
-  * `templates.py`: Query templates
-  * `pdf_generator.py`: PDF report generation
-* `data/`: Directory for data caching and storage
-* `Dockerfile` & `docker-compose.yml`: Containerization configuration
-* `pyproject.toml`: Project dependencies and configuration
+```
+"Compare the performance of AAPL and MSFT over the past year"
+"Show me the RSI indicator for NVDA over the last 3 months"
+"Calculate the volatility of TSLA stock since January"
+"Plot the moving averages for SPY with 50 and 200 day periods"
+```
 
-## License
+## 🔧 Configuration
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Configuration options can be set in the following locations:
 
-## Contribution
-
-Contributions are welcome! Please open an issue or submit a pull request with your improvements.
+- LLM settings: Configure Ollama parameters in `finance_crew.py`
+- Agent settings: Modify agent roles and goals in `finance_crew.py`
+- UI customization: Adjust Streamlit settings in `streamlit_app.py`
