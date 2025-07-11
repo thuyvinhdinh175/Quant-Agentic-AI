@@ -8,75 +8,138 @@ A powerful agentic AI system for quantitative financial analysis that processes 
 
 ```mermaid
 flowchart TD
-    %% Main components only
-    A[User] -->|Query| B[MCP Server]
-    B --> C[Agent System]
-    C --> D[Data Sources]
-    C --> E[UI Layer]
-    B -->|Results| A
+    %% Main components
+    User["User"] -->|"1. Natural Language Query"| MCP["MCP Server"]
+    MCP -->|"8. Results & Visualizations"| User
     
-    %% LLM connection
-    F[LLM Backend] --> C
+    %% Core system flow
+    MCP -->|"2. Process Query"| Agents["Agent System"]
+    Agents -->|"5. Access Data"| Data["Data Sources"]
+    Agents -->|"7. Generate Outputs"| UI["User Interface"]
+    
+    %% LLM integration
+    LLM["LLM Backend"] -->|"3. Power Reasoning"| Agents
+    
+    %% System communication
+    Agents -->|"4. Log Activity"| LLM
+    Data -->|"6. Return Data"| Agents
 ```
 
 ### Themed Diagrams
 
-#### 1. User Query Flow
-
-```mermaid
-flowchart TD
-    A[User] -->|Natural Language Query| B[MCP Server]
-    B -->|Parse Query| C[Query Parser Agent]
-    C -->|Extracted Data| D[Code Writer Agent]
-    D -->|Python Code| E[Code Execution Agent]
-    E -->|Analysis Results| F[Technical Analysis]
-    F -->|Final Results| B
-    B -->|Display Results| A
-```
-
-#### 2. Agent Architecture
+#### 1. User Interaction Flow
 
 ```mermaid
 flowchart LR
-    C[Query Parser Agent] -->|Extracted Data| D[Code Writer Agent]
-    D -->|Python Code| E[Code Execution Agent]
-    E -->|Code Analysis| F[Technical Analysis Agent]
-    F -->|Risk Assessment| G[Risk Analysis Agent]
-    G -->|Market Sentiment| H[Sentiment Agent]
+    User["User"] -->|"1. Submit Natural Language Query"| MCP["MCP Server"]
+    MCP -->|"2. Parse Query"| QueryAgent["Query Parser Agent"]
+    QueryAgent -->|"3. Structured Query"| CodeAgent["Code Writer Agent"]
+    CodeAgent -->|"4. Python Code"| ExecAgent["Code Execution Agent"]
+    ExecAgent -->|"5. Analysis Results"| MCP
+    MCP -->|"6. Formatted Results"| User
 ```
 
-#### 3. Data Integration
+#### 2. Multi-Agent System
+
+```mermaid
+flowchart LR
+    QueryAgent["Query Parser Agent"] -->|"Query Extraction"| CodeAgent["Code Writer Agent"]
+    CodeAgent -->|"Generated Code"| ExecAgent["Code Execution Agent"]
+    ExecAgent -->|"Raw Analysis"| TechAgent["Technical Analysis Agent"]
+    TechAgent -->|"Technical Insights"| RiskAgent["Risk Analysis Agent"]
+    RiskAgent -->|"Risk Assessment"| SentimentAgent["Sentiment Agent"]
+    
+    %% Common terminology with main diagram
+    subgraph Agents["Agent System"]
+        QueryAgent
+        CodeAgent
+        ExecAgent
+        TechAgent
+        RiskAgent
+        SentimentAgent
+    end
+```
+
+#### 3. Data Source Integration
+
+```mermaid
+flowchart LR
+    %% Consistent node naming
+    ExecAgent["Code Execution Agent"] <-->|"Price & Volume Data"| YFinance["yfinance API"]
+    TechAgent["Technical Analysis Agent"] <-->|"Indicators & Patterns"| TALib["TA-Lib"]
+    RiskAgent["Risk Analysis Agent"] <-->|"Financial Statements"| SEC["SEC Filings"]
+    SentimentAgent["Sentiment Agent"] <-->|"News & Social Data"| News["News APIs"]
+    
+    %% Common terminology with main diagram
+    subgraph Agents["Agent System"]
+        ExecAgent
+        TechAgent
+        RiskAgent
+        SentimentAgent
+    end
+    
+    subgraph Data["Data Sources"]
+        YFinance
+        TALib
+        SEC
+        News
+    end
+```
+
+#### 4. LLM & Memory Integration
 
 ```mermaid
 flowchart TD
-    E[Code Execution Agent] -->|Fetch Data| I[yfinance API]
-    I -->|Stock Data| E
+    %% Consistent naming and connection patterns
+    DeepSeek["DeepSeek-R1 Model"] -->|"Reasoning"| QueryAgent["Query Parser Agent"]
+    DeepSeek -->|"Code Generation"| CodeAgent["Code Writer Agent"]
+    DeepSeek -->|"Risk Analysis"| RiskAgent["Risk Analysis Agent"]
+    DeepSeek -->|"Sentiment Analysis"| SentimentAgent["Sentiment Agent"]
     
-    F[Technical Analysis Agent] -->|Technical Indicators| L[TA-Lib]
-    L -->|Analysis Results| F
+    Memory["Agent Memory"] -->|"Context Retention"| QueryAgent
+    Templates["Query Templates"] -->|"Structured Prompts"| QueryAgent
     
-    G[Risk Analysis Agent] -->|Company Filings| K[SEC Filings]
-    K -->|Financial Reports| G
+    QueryAgent -->|"Activity Logs"| Logging["Logging System"]
+    CodeAgent -->|"Activity Logs"| Logging
     
-    H[Sentiment Agent] -->|News Queries| J[News APIs]
-    J -->|Market News| H
+    %% Common terminology with main diagram
+    subgraph Agents["Agent System"]
+        QueryAgent["Query Parser Agent"]
+        CodeAgent["Code Writer Agent"]
+        RiskAgent["Risk Analysis Agent"]
+        SentimentAgent["Sentiment Agent"]
+    end
+    
+    subgraph LLM["LLM Backend"]
+        DeepSeek
+        Memory
+        Templates
+        Logging
+    end
 ```
 
-#### 4. LLM Integration
+#### 5. Output Generation Flow
 
 ```mermaid
-flowchart TD
-    Q[Ollama - DeepSeek-R1] -->|LLM Capabilities| C[Query Parser Agent]
-    Q -->|LLM Capabilities| D[Code Writer Agent]
-    Q -->|LLM Capabilities| G[Risk Analysis Agent]
-    Q -->|LLM Capabilities| H[Sentiment Agent]
+flowchart LR
+    %% Consistent naming with main diagram
+    SentimentAgent["Sentiment Agent"] -->|"Analysis Results"| Streamlit["Streamlit UI"]
+    SentimentAgent -->|"Detailed Reports"| PDF["PDF Reports"]
+    TechAgent["Technical Analysis Agent"] -->|"Visualization Data"| Charts["Interactive Charts"]
+    MCP["MCP Server"] -->|"IDE Integration"| Plugin["IDE Plugin"]
     
-    R[Agent Memory] -->|Historical Context| C
-    S[Query Templates] -->|Structured Prompts| C
+    %% Common terminology with main diagram
+    subgraph Agents["Agent System"]
+        SentimentAgent
+        TechAgent
+    end
     
-    C -->|Events| T[Logging System]
-    D -->|Events| T
-    E -->|Events| T
+    subgraph UI["User Interface"]
+        Streamlit
+        PDF
+        Charts
+        Plugin
+    end
 ```
 
 ## Features
