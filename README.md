@@ -7,25 +7,22 @@ A powerful agentic AI system for quantitative financial analysis that processes 
 ```mermaid
 flowchart TD
     %% User Layer
-    subgraph User["👤 User"]
+    subgraph User["User"]
         A[User Input (Natural Language)]
     end
-
     %% MCP Layer
-    subgraph MCP["🧠 MCP Server"]
+    subgraph MCP["MCP Server"]
         B[MCP Server]
     end
-
     %% LLM Backend
-    subgraph LLM["🧩 LLM Backend"]
+    subgraph LLM["LLM Backend"]
         Q[Ollama - DeepSeek-R1]
         R[Agent Memory]
         S[Query Templates]
         T[Logging System]
     end
-
     %% Multi-Agent System
-    subgraph Agents["🤖 Agent System"]
+    subgraph Agents["Agent System"]
         C[Query Parser Agent]
         D[Code Writer Agent]
         E[Code Execution Agent]
@@ -33,49 +30,47 @@ flowchart TD
         G[Risk Analysis Agent]
         H[Sentiment Agent]
     end
-
     %% Data Sources
-    subgraph Data["📊 Data Sources"]
+    subgraph Data["Data Sources"]
         I[yfinance API]
         J[News APIs]
         K[SEC Filings]
         L[TA-Lib]
     end
-
     %% User Interface Layer
-    subgraph UI["🖼️ User Interface"]
+    subgraph UI["User Interface"]
         M[Streamlit UI]
         N[PDF Reports]
         O[Interactive Charts]
         P[IDE Plugin]
     end
-
     %% User Query Flow
     A --> B
     B --> C
-
     %% Agent Flow
     C --> D --> E --> F --> G --> H
-
     %% LLM Support
-    Q --> C & D & E & F & G & H
+    Q --> C
+    Q --> D
+    Q --> E
+    Q --> F
+    Q --> G
+    Q --> H
     R --> C
     S --> C
     C --> T
     D --> T
     E --> T
-
     %% Data Sources Connection
     E --> I
     F --> L
     G --> K
     H --> J
-
     %% Output Connections
-    H --> M & N
+    H --> M
+    H --> N
     F --> O
     B --> P
-
 ```
 
 ## Features
