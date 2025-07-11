@@ -7,49 +7,41 @@ A powerful agentic AI system for quantitative financial analysis that processes 
 ### Complete System Architecture
 
 ```mermaid
-flowchart TD
-    %% Main components
-    User["User"] -->|"1. Natural Language Query"| MCP["MCP Server"]
-    MCP -->|"8. Results & Visualizations"| User
-    
-    %% Core system flow
-    MCP -->|"2. Process Query"| Agents["Agent System"]
-    Agents -->|"5. Access Data"| Data["Data Sources"]
-    Agents -->|"7. Generate Outputs"| UI["User Interface"]
-    
-    %% LLM integration
-    LLM["LLM Backend"] -->|"3. Power Reasoning"| Agents
-    
-    %% System communication
-    Agents -->|"4. Log Activity"| LLM
-    Data -->|"6. Return Data"| Agents
+graph TD
+    User["User"] -->|"Query"| MCP["MCP Server"]
+    MCP -->|"Results"| User
+    MCP -->|"Process"| Agents["Agent System"]
+    Agents -->|"Access"| Data["Data Sources"]
+    Agents -->|"Generate"| UI["User Interface"]
+    LLM["LLM Backend"] -->|"Power"| Agents
+    Agents -->|"Log"| LLM
+    Data -->|"Return"| Agents
 ```
 
 ### Themed Diagrams
 
-#### 1. User Interaction Flow
+#### User Interaction Flow
 
 ```mermaid
-flowchart LR
-    User["User"] -->|"1. Submit Natural Language Query"| MCP["MCP Server"]
-    MCP -->|"2. Parse Query"| QueryAgent["Query Parser Agent"]
-    QueryAgent -->|"3. Structured Query"| CodeAgent["Code Writer Agent"]
-    CodeAgent -->|"4. Python Code"| ExecAgent["Code Execution Agent"]
-    ExecAgent -->|"5. Analysis Results"| MCP
-    MCP -->|"6. Formatted Results"| User
+graph LR
+    User["User"] -->|"Query"| MCP["MCP Server"]
+    MCP -->|"Parse"| QueryAgent["Query Parser Agent"]
+    QueryAgent -->|"Structure"| CodeAgent["Code Writer Agent"]
+    CodeAgent -->|"Code"| ExecAgent["Code Execution Agent"]
+    ExecAgent -->|"Results"| MCP
+    MCP -->|"Display"| User
 ```
 
-#### 2. Multi-Agent System
+#### Multi-Agent System
 
 ```mermaid
-flowchart LR
-    QueryAgent["Query Parser Agent"] -->|"Query Extraction"| CodeAgent["Code Writer Agent"]
-    CodeAgent -->|"Generated Code"| ExecAgent["Code Execution Agent"]
-    ExecAgent -->|"Raw Analysis"| TechAgent["Technical Analysis Agent"]
-    TechAgent -->|"Technical Insights"| RiskAgent["Risk Analysis Agent"]
-    RiskAgent -->|"Risk Assessment"| SentimentAgent["Sentiment Agent"]
+graph LR
+    QueryAgent["Query Parser Agent"] -->|"Extract"| CodeAgent["Code Writer Agent"]
+    CodeAgent -->|"Generate"| ExecAgent["Code Execution Agent"]
+    ExecAgent -->|"Analyze"| TechAgent["Technical Analysis Agent"]
+    TechAgent -->|"Assess"| RiskAgent["Risk Analysis Agent"]
+    RiskAgent -->|"Evaluate"| SentimentAgent["Sentiment Agent"]
     
-    %% Common terminology with main diagram
     subgraph Agents["Agent System"]
         QueryAgent
         CodeAgent
@@ -60,86 +52,47 @@ flowchart LR
     end
 ```
 
-#### 3. Data Source Integration
+#### Data Source Integration
 
 ```mermaid
-flowchart LR
-    %% Consistent node naming
-    ExecAgent["Code Execution Agent"] <-->|"Price & Volume Data"| YFinance["yfinance API"]
-    TechAgent["Technical Analysis Agent"] <-->|"Indicators & Patterns"| TALib["TA-Lib"]
-    RiskAgent["Risk Analysis Agent"] <-->|"Financial Statements"| SEC["SEC Filings"]
-    SentimentAgent["Sentiment Agent"] <-->|"News & Social Data"| News["News APIs"]
+graph LR
+    ExecAgent["Code Execution Agent"] -->|"Fetch"| YFinance["yfinance API"]
+    YFinance -->|"Return"| ExecAgent
     
-    %% Common terminology with main diagram
-    subgraph Agents["Agent System"]
-        ExecAgent
-        TechAgent
-        RiskAgent
-        SentimentAgent
-    end
+    TechAgent["Technical Analysis Agent"] -->|"Use"| TALib["TA-Lib"]
+    TALib -->|"Provide"| TechAgent
     
-    subgraph Data["Data Sources"]
-        YFinance
-        TALib
-        SEC
-        News
-    end
+    RiskAgent["Risk Analysis Agent"] -->|"Read"| SEC["SEC Filings"]
+    SEC -->|"Inform"| RiskAgent
+    
+    SentimentAgent["Sentiment Agent"] -->|"Query"| News["News APIs"]
+    News -->|"Deliver"| SentimentAgent
 ```
 
-#### 4. LLM & Memory Integration
+#### LLM & Memory Integration
 
 ```mermaid
-flowchart TD
-    %% Consistent naming and connection patterns
-    DeepSeek["DeepSeek-R1 Model"] -->|"Reasoning"| QueryAgent["Query Parser Agent"]
-    DeepSeek -->|"Code Generation"| CodeAgent["Code Writer Agent"]
-    DeepSeek -->|"Risk Analysis"| RiskAgent["Risk Analysis Agent"]
-    DeepSeek -->|"Sentiment Analysis"| SentimentAgent["Sentiment Agent"]
+graph TD
+    DeepSeek["DeepSeek-R1 Model"] -->|"Power"| QueryAgent["Query Parser Agent"]
+    DeepSeek -->|"Enable"| CodeAgent["Code Writer Agent"]
+    DeepSeek -->|"Support"| RiskAgent["Risk Analysis Agent"]
+    DeepSeek -->|"Enhance"| SentimentAgent["Sentiment Agent"]
     
-    Memory["Agent Memory"] -->|"Context Retention"| QueryAgent
-    Templates["Query Templates"] -->|"Structured Prompts"| QueryAgent
+    Memory["Agent Memory"] -->|"Inform"| QueryAgent
+    Templates["Query Templates"] -->|"Guide"| QueryAgent
     
-    QueryAgent -->|"Activity Logs"| Logging["Logging System"]
-    CodeAgent -->|"Activity Logs"| Logging
-    
-    %% Common terminology with main diagram
-    subgraph Agents["Agent System"]
-        QueryAgent["Query Parser Agent"]
-        CodeAgent["Code Writer Agent"]
-        RiskAgent["Risk Analysis Agent"]
-        SentimentAgent["Sentiment Agent"]
-    end
-    
-    subgraph LLM["LLM Backend"]
-        DeepSeek
-        Memory
-        Templates
-        Logging
-    end
+    QueryAgent -->|"Log"| Logging["Logging System"]
+    CodeAgent -->|"Record"| Logging
 ```
 
-#### 5. Output Generation Flow
+#### Output Generation Flow
 
 ```mermaid
-flowchart LR
-    %% Consistent naming with main diagram
-    SentimentAgent["Sentiment Agent"] -->|"Analysis Results"| Streamlit["Streamlit UI"]
-    SentimentAgent -->|"Detailed Reports"| PDF["PDF Reports"]
-    TechAgent["Technical Analysis Agent"] -->|"Visualization Data"| Charts["Interactive Charts"]
-    MCP["MCP Server"] -->|"IDE Integration"| Plugin["IDE Plugin"]
-    
-    %% Common terminology with main diagram
-    subgraph Agents["Agent System"]
-        SentimentAgent
-        TechAgent
-    end
-    
-    subgraph UI["User Interface"]
-        Streamlit
-        PDF
-        Charts
-        Plugin
-    end
+graph LR
+    SentimentAgent["Sentiment Agent"] -->|"Display"| Streamlit["Streamlit UI"]
+    SentimentAgent -->|"Generate"| PDF["PDF Reports"]
+    TechAgent["Technical Analysis Agent"] -->|"Visualize"| Charts["Interactive Charts"]
+    MCP["MCP Server"] -->|"Connect"| Plugin["IDE Plugin"]
 ```
 
 ## Features
