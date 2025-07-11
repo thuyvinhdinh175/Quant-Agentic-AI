@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  financial-analyst:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: financial-analyst-deepseek
+    ports:
+      - "8000:8000"  # Expose the MCP server port
+    volumes:
+      - ./data:/app/data  # Mount a volume for persistent data (if needed)
+    environment:
+      - OLLAMA_HOST=localhost
+      - OLLAMA_PORT=11434
+    restart: unless-stopped
