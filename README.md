@@ -5,72 +5,68 @@ A powerful agentic AI system for quantitative financial analysis that processes 
 ## Architecture Overview
 
 ```mermaid
-flowchart TD
-    %% User Layer
-    subgraph User["User"]
-        A[User Input (Natural Language)]
-    end
-    %% MCP Layer
-    subgraph MCP["MCP Server"]
-        B[MCP Server]
-    end
-    %% LLM Backend
-    subgraph LLM["LLM Backend"]
-        Q[Ollama - DeepSeek-R1]
-        R[Agent Memory]
-        S[Query Templates]
-        T[Logging System]
-    end
-    %% Multi-Agent System
-    subgraph Agents["Agent System"]
-        C[Query Parser Agent]
-        D[Code Writer Agent]
-        E[Code Execution Agent]
-        F[Technical Analysis Agent]
-        G[Risk Analysis Agent]
-        H[Sentiment Agent]
-    end
-    %% Data Sources
-    subgraph Data["Data Sources"]
-        I[yfinance API]
-        J[News APIs]
-        K[SEC Filings]
-        L[TA-Lib]
-    end
-    %% User Interface Layer
-    subgraph UI["User Interface"]
-        M[Streamlit UI]
-        N[PDF Reports]
-        O[Interactive Charts]
-        P[IDE Plugin]
-    end
-    %% User Query Flow
-    A --> B
-    B --> C
+graph TD
+    A[User Input] --> B[MCP Server]
+    B --> C[Query Parser Agent]
+    
     %% Agent Flow
-    C --> D --> E --> F --> G --> H
+    C --> D[Code Writer Agent]
+    D --> E[Code Execution Agent]
+    E --> F[Technical Analysis Agent]
+    F --> G[Risk Analysis Agent]
+    G --> H[Sentiment Agent]
+    
     %% LLM Support
-    Q --> C
+    Q[Ollama - DeepSeek-R1] --> C
     Q --> D
     Q --> E
     Q --> F
     Q --> G
     Q --> H
-    R --> C
-    S --> C
-    C --> T
+    
+    %% Other LLM Components
+    R[Agent Memory] --> C
+    S[Query Templates] --> C
+    C --> T[Logging System]
     D --> T
     E --> T
-    %% Data Sources Connection
-    E --> I
-    F --> L
-    G --> K
-    H --> J
-    %% Output Connections
-    H --> M
-    H --> N
-    F --> O
-    B --> P
+    
+    %% Data Sources
+    E --> I[yfinance API]
+    F --> L[TA-Lib]
+    G --> K[SEC Filings]
+    H --> J[News APIs]
+    
+    %% Output
+    H --> M[Streamlit UI]
+    H --> N[PDF Reports]
+    F --> O[Interactive Charts]
+    B --> P[IDE Plugin]
+    
+    %% Styling with groups
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style Q fill:#bfb,stroke:#333,stroke-width:2px
+    
+    %% Group agents with similar styling
+    style C fill:#fbb,stroke:#333,stroke-width:1px
+    style D fill:#fbb,stroke:#333,stroke-width:1px
+    style E fill:#fbb,stroke:#333,stroke-width:1px
+    style F fill:#fbb,stroke:#333,stroke-width:1px
+    style G fill:#fbb,stroke:#333,stroke-width:1px
+    style H fill:#fbb,stroke:#333,stroke-width:1px
+    
+    %% Group data sources
+    style I fill:#bff,stroke:#333,stroke-width:1px
+    style J fill:#bff,stroke:#333,stroke-width:1px
+    style K fill:#bff,stroke:#333,stroke-width:1px
+    style L fill:#bff,stroke:#333,stroke-width:1px
+    
+    %% Group UI elements
+    style M fill:#fbf,stroke:#333,stroke-width:1px
+    style N fill:#fbf,stroke:#333,stroke-width:1px
+    style O fill:#fbf,stroke:#333,stroke-width:1px
+    style P fill:#fbf,stroke:#333,stroke-width:1px
 ```
 
 ## Features
