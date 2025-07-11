@@ -5,68 +5,73 @@ A powerful agentic AI system for quantitative financial analysis that processes 
 ## Architecture Overview
 
 ```mermaid
-graph TD
-    A[User Input] --> B[MCP Server]
-    B --> C[Query Parser Agent]
+flowchart TD
+    %% Main user flow
+    A[User] -->|Natural Language Query| B[MCP Server]
+    B -->|Final Result| A
     
-    %% Agent Flow
-    C --> D[Code Writer Agent]
-    D --> E[Code Execution Agent]
-    E --> F[Technical Analysis Agent]
-    F --> G[Risk Analysis Agent]
-    G --> H[Sentiment Agent]
+    %% Connect Server to Agent System
+    B -->|Parse Query| C
     
-    %% LLM Support
-    Q[Ollama - DeepSeek-R1] --> C
-    Q --> D
-    Q --> E
-    Q --> F
-    Q --> G
-    Q --> H
+    %% Explicit subgraph direction
+    direction TB
     
-    %% Other LLM Components
-    R[Agent Memory] --> C
-    S[Query Templates] --> C
-    C --> T[Logging System]
-    D --> T
-    E --> T
+    %% Subgraph for LLM Backend
+    subgraph LLMBackend["LLM Backend"]
+        direction LR
+        Q[Ollama - DeepSeek-R1]
+        R[Agent Memory]
+        S[Query Templates]
+        T[Logging System]
+    end
     
-    %% Data Sources
-    E --> I[yfinance API]
-    F --> L[TA-Lib]
-    G --> K[SEC Filings]
-    H --> J[News APIs]
+    %% Connect LLM to other components
+    Q -->|LLM Capabilities| C
+    Q -->|LLM Capabilities| D
+    Q -->|LLM Capabilities| G
+    Q -->|LLM Capabilities| H
+    R -->|Historical Context| C
+    S -->|Structured Prompts| C
+    AgentSystem -->|Log Events| T
     
-    %% Output
-    H --> M[Streamlit UI]
-    H --> N[PDF Reports]
-    F --> O[Interactive Charts]
-    B --> P[IDE Plugin]
+    %% Subgraph for Agent System
+    subgraph AgentSystem["Multi-Agent System"]
+        direction LR
+        C[Query Parser Agent] -->|Extracted Data| D[Code Writer Agent]
+        D -->|Python Code| E[Code Execution Agent]
+        E -->|Code Analysis| F[Technical Analysis Agent]
+        F -->|Risk Assessment| G[Risk Analysis Agent]
+        G -->|Market Sentiment| H[Sentiment Agent]
+    end
     
-    %% Styling with groups
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#bbf,stroke:#333,stroke-width:2px
-    style Q fill:#bfb,stroke:#333,stroke-width:2px
+    %% Subgraph for Data Sources
+    subgraph DataSources["Data Sources"]
+        direction LR
+        I[yfinance API] -->|Stock Data| E
+        J[News APIs] -->|Financial News| H
+        K[SEC Filings] -->|Company Reports| G
+        L[TA-Lib] -->|Technical Indicators| F
+    end
     
-    %% Group agents with similar styling
-    style C fill:#fbb,stroke:#333,stroke-width:1px
-    style D fill:#fbb,stroke:#333,stroke-width:1px
-    style E fill:#fbb,stroke:#333,stroke-width:1px
-    style F fill:#fbb,stroke:#333,stroke-width:1px
-    style G fill:#fbb,stroke:#333,stroke-width:1px
-    style H fill:#fbb,stroke:#333,stroke-width:1px
+    %% Subgraph for UI and Output
+    subgraph UserInterface["User Interface"]
+        direction LR
+        M[Streamlit UI]
+        N[PDF Reports]
+        O[Interactive Charts]
+        P[IDE Plugin]
+    end
     
-    %% Group data sources
-    style I fill:#bff,stroke:#333,stroke-width:1px
-    style J fill:#bff,stroke:#333,stroke-width:1px
-    style K fill:#bff,stroke:#333,stroke-width:1px
-    style L fill:#bff,stroke:#333,stroke-width:1px
+    %% Connect Agent System to UI
+    H -->|Analysis Results| M
+    H -->|Generate Report| N
+    F -->|Visualization Data| O
+    B -->|IDE Integration| P
     
-    %% Group UI elements
-    style M fill:#fbf,stroke:#333,stroke-width:1px
-    style N fill:#fbf,stroke:#333,stroke-width:1px
-    style O fill:#fbf,stroke:#333,stroke-width:1px
-    style P fill:#fbf,stroke:#333,stroke-width:1px
+    %% Vertical arrangement of subgraphs
+    LLMBackend --> AgentSystem
+    AgentSystem --> DataSources
+    DataSources --> UserInterface
 ```
 
 ## Features
