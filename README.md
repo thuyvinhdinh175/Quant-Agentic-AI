@@ -4,74 +4,79 @@ A powerful agentic AI system for quantitative financial analysis that processes 
 
 ## Architecture Overview
 
+### Complete System Architecture
+
 ```mermaid
 flowchart TD
-    %% Main user flow
+    %% Main components only
+    A[User] -->|Query| B[MCP Server]
+    B --> C[Agent System]
+    C --> D[Data Sources]
+    C --> E[UI Layer]
+    B -->|Results| A
+    
+    %% LLM connection
+    F[LLM Backend] --> C
+```
+
+### Themed Diagrams
+
+#### 1. User Query Flow
+
+```mermaid
+flowchart TD
     A[User] -->|Natural Language Query| B[MCP Server]
-    B -->|Final Result| A
+    B -->|Parse Query| C[Query Parser Agent]
+    C -->|Extracted Data| D[Code Writer Agent]
+    D -->|Python Code| E[Code Execution Agent]
+    E -->|Analysis Results| F[Technical Analysis]
+    F -->|Final Results| B
+    B -->|Display Results| A
+```
+
+#### 2. Agent Architecture
+
+```mermaid
+flowchart LR
+    C[Query Parser Agent] -->|Extracted Data| D[Code Writer Agent]
+    D -->|Python Code| E[Code Execution Agent]
+    E -->|Code Analysis| F[Technical Analysis Agent]
+    F -->|Risk Assessment| G[Risk Analysis Agent]
+    G -->|Market Sentiment| H[Sentiment Agent]
+```
+
+#### 3. Data Integration
+
+```mermaid
+flowchart TD
+    E[Code Execution Agent] -->|Fetch Data| I[yfinance API]
+    I -->|Stock Data| E
     
-    %% Connect Server to Agent System
-    B -->|Parse Query| C
+    F[Technical Analysis Agent] -->|Technical Indicators| L[TA-Lib]
+    L -->|Analysis Results| F
     
-    %% Explicit subgraph direction
-    direction TB
+    G[Risk Analysis Agent] -->|Company Filings| K[SEC Filings]
+    K -->|Financial Reports| G
     
-    %% Subgraph for LLM Backend
-    subgraph LLMBackend["LLM Backend"]
-        direction LR
-        Q[Ollama - DeepSeek-R1]
-        R[Agent Memory]
-        S[Query Templates]
-        T[Logging System]
-    end
+    H[Sentiment Agent] -->|News Queries| J[News APIs]
+    J -->|Market News| H
+```
+
+#### 4. LLM Integration
+
+```mermaid
+flowchart TD
+    Q[Ollama - DeepSeek-R1] -->|LLM Capabilities| C[Query Parser Agent]
+    Q -->|LLM Capabilities| D[Code Writer Agent]
+    Q -->|LLM Capabilities| G[Risk Analysis Agent]
+    Q -->|LLM Capabilities| H[Sentiment Agent]
     
-    %% Connect LLM to other components
-    Q -->|LLM Capabilities| C
-    Q -->|LLM Capabilities| D
-    Q -->|LLM Capabilities| G
-    Q -->|LLM Capabilities| H
-    R -->|Historical Context| C
-    S -->|Structured Prompts| C
-    AgentSystem -->|Log Events| T
+    R[Agent Memory] -->|Historical Context| C
+    S[Query Templates] -->|Structured Prompts| C
     
-    %% Subgraph for Agent System
-    subgraph AgentSystem["Multi-Agent System"]
-        direction LR
-        C[Query Parser Agent] -->|Extracted Data| D[Code Writer Agent]
-        D -->|Python Code| E[Code Execution Agent]
-        E -->|Code Analysis| F[Technical Analysis Agent]
-        F -->|Risk Assessment| G[Risk Analysis Agent]
-        G -->|Market Sentiment| H[Sentiment Agent]
-    end
-    
-    %% Subgraph for Data Sources
-    subgraph DataSources["Data Sources"]
-        direction LR
-        I[yfinance API] -->|Stock Data| E
-        J[News APIs] -->|Financial News| H
-        K[SEC Filings] -->|Company Reports| G
-        L[TA-Lib] -->|Technical Indicators| F
-    end
-    
-    %% Subgraph for UI and Output
-    subgraph UserInterface["User Interface"]
-        direction LR
-        M[Streamlit UI]
-        N[PDF Reports]
-        O[Interactive Charts]
-        P[IDE Plugin]
-    end
-    
-    %% Connect Agent System to UI
-    H -->|Analysis Results| M
-    H -->|Generate Report| N
-    F -->|Visualization Data| O
-    B -->|IDE Integration| P
-    
-    %% Vertical arrangement of subgraphs
-    LLMBackend --> AgentSystem
-    AgentSystem --> DataSources
-    DataSources --> UserInterface
+    C -->|Events| T[Logging System]
+    D -->|Events| T
+    E -->|Events| T
 ```
 
 ## Features
